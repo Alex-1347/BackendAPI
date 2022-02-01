@@ -1,0 +1,121 @@
+﻿https://jasonwatmore.com/post/2021/04/30/net-5-jwt-authentication-tutorial-with-example-api
+https://github.com/cornflourblue/dotnet-5-jwt-authentication-api/issues
+
+
+1. Request
+
+curl -X POST -H "Content-Type: application/json' -i http://localhost:4000/users/authenticate --data '{
+    "username" "test",
+    "password": "test"
+}'
+
+2. Response
+
+{
+  "id": 1,
+  "firstName": "Test",
+  "lastName": "User",
+  "username": "test",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2NDM2NjMzODUsImV4cCI6MTY0NDI2ODE4NSwiaWF0IjoxNjQzNjYzMzg1fQ.oOhr3ffCGsHNl5tnC8vxXzQVcHu4HH2KvejUJD1wQlI"
+}
+
+3. AU Request
+
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2NDM2NjMzODUsImV4cCI6MTY0NDI2ODE4NSwiaWF0IjoxNjQzNjYzMzg1fQ.oOhr3ffCGsHNl5tnC8vxXzQVcHu4HH2KvejUJD1wQlI' -i http://localhost:4000/users --data '{
+    "username": "test",
+    "password": "test"
+}'
+
+4. Response
+
+[{
+  "id": 1,
+  "firstName": "Test",
+  "lastName": "User",
+  "username": "test"
+}]
+
+(more about authorization headers) https://www.loginradius.com/blog/async/everything-you-want-to-know-about-authorization-headers/
+use for testing Mozzila addon RESTClient https://addons.mozilla.org/en-US/firefox/addon/restclient/ https://github.com/chao/RESTClient
+
+
+5. Swagger
+
+curl -X GET -H 'Content-Type: application/json' -i 'http://localhost:4000/swagger/V2/swagger.json'
+
+6. Response
+
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Backend API",
+    "version": "V2"
+  },
+  "paths": {
+    "/Users/authenticate": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthenticateRequest": {
+        "required": [
+          "password",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
+
+7. SwaggerUI BrowserGet http://localhost:4000/swagger/index.html
